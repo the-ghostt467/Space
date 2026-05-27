@@ -1,1 +1,413 @@
-file:///C:/Users/tspic/Downloads/ceu.html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Céu Estrelado</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Raleway:wght@200;300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --azul-profundo: #020818;
+      --azul-medio: #0a1628;
+      --azul-claro: #1a3a6e;
+      --dourado: #f0c060;
+      --prata: #c8d8f0;
+      --branco-lua: #f8f4e8;
+    }
+
+    body {
+      background: var(--azul-profundo);
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: 'Raleway', sans-serif;
+      cursor: default;
+    }
+
+    /* Gradiente do céu */
+    .ceu {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, #0d1f4a 0%, #060f28 40%, var(--azul-profundo) 100%);
+    }
+
+    /* Névoa atmosférica */
+    .nevoa {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 20% 60%, rgba(20,60,120,0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 30% at 80% 40%, rgba(10,30,80,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Lua */
+    .lua {
+      position: fixed;
+      top: 8%;
+      right: 12%;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fffbe8, #f0d890 40%, #c8a840 100%);
+      box-shadow:
+        0 0 40px 15px rgba(240,200,80,0.25),
+        0 0 80px 30px rgba(240,200,80,0.12),
+        0 0 160px 60px rgba(240,200,80,0.06);
+      animation: lua-pulse 6s ease-in-out infinite;
+    }
+
+    .lua::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle at 65% 65%, rgba(0,0,0,0.15), transparent 60%);
+    }
+
+    @keyframes lua-pulse {
+      0%, 100% { box-shadow: 0 0 40px 15px rgba(240,200,80,0.25), 0 0 80px 30px rgba(240,200,80,0.12), 0 0 160px 60px rgba(240,200,80,0.06); }
+      50% { box-shadow: 0 0 50px 20px rgba(240,200,80,0.35), 0 0 100px 40px rgba(240,200,80,0.18), 0 0 200px 80px rgba(240,200,80,0.08); }
+    }
+
+    /* Container das estrelas */
+    .estrelas-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* Estrelas de fundo (decorativas, sem interação) */
+    .estrela-bg {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: piscar var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+    }
+
+    @keyframes piscar {
+      0%, 100% { opacity: var(--op, 0.6); transform: scale(1); }
+      50% { opacity: 0.2; transform: scale(0.7); }
+    }
+
+    /* Estrelas clicáveis */
+    .estrela {
+      position: fixed;
+      pointer-events: all;
+      cursor: pointer;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+    }
+
+    .estrela-corpo {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+
+    .estrela:hover .estrela-corpo {
+      transform: scale(1.4);
+    }
+
+    /* SVG estrela de 5 pontas */
+    .estrela svg {
+      filter: drop-shadow(0 0 6px rgba(200,216,240,0.8));
+      transition: filter 0.3s ease;
+    }
+
+    .estrela:hover svg {
+      filter: drop-shadow(0 0 14px rgba(200,216,240,1)) drop-shadow(0 0 28px rgba(200,216,240,0.6));
+    }
+
+    .estrela.ativa svg {
+      filter: drop-shadow(0 0 16px var(--dourado)) drop-shadow(0 0 32px rgba(240,192,96,0.7));
+    }
+
+    /* Label da estrela */
+    .estrela-label {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--prata);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .estrela:hover .estrela-label {
+      opacity: 1;
+    }
+
+    /* Modal da mensagem */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,8,24,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .overlay.visivel {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .card-mensagem {
+      position: relative;
+      max-width: 420px;
+      width: 90%;
+      padding: 48px 40px;
+      background: linear-gradient(145deg, rgba(10,22,40,0.95), rgba(6,15,40,0.98));
+      border: 1px solid rgba(200,216,240,0.12);
+      border-radius: 2px;
+      text-align: center;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.5s ease;
+    }
+
+    .overlay.visivel .card-mensagem {
+      transform: translateY(0) scale(1);
+    }
+
+    .card-estrela-icon {
+      margin-bottom: 20px;
+    }
+
+    .card-nome {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--dourado);
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    .card-texto {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 22px;
+      line-height: 1.7;
+      color: var(--prata);
+      margin-bottom: 36px;
+    }
+
+    .card-fechar {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(200,216,240,0.4);
+      background: none;
+      border: 1px solid rgba(200,216,240,0.15);
+      padding: 10px 28px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 1px;
+    }
+
+    .card-fechar:hover {
+      color: var(--prata);
+      border-color: rgba(200,216,240,0.4);
+    }
+
+    /* Linha decorativa */
+    .linha {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+      margin: 0 auto 24px;
+    }
+
+    /* Título do céu */
+    .titulo-ceu {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 13px;
+      letter-spacing: 5px;
+      color: rgba(200,216,240,0.25);
+      text-transform: uppercase;
+      white-space: nowrap;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+
+<div class="ceu"></div>
+<div class="nevoa"></div>
+
+<!-- Lua -->
+<div class="lua"></div>
+
+<!-- Estrelas de fundo decorativas (geradas via JS) -->
+<div class="estrelas-container" id="estrelas-bg"></div>
+
+<!-- Estrelas clicáveis -->
+<div id="estrelas-interativas"></div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="card-mensagem">
+    <div class="card-estrela-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="rgba(240,192,96,0.9)" stroke="rgba(240,192,96,0.4)" stroke-width="0.5"/>
+      </svg>
+    </div>
+    <div class="card-nome" id="card-nome"></div>
+    <div class="linha"></div>
+    <div class="card-texto" id="card-texto"></div>
+    <button class="card-fechar" onclick="fecharModal()">fechar</button>
+  </div>
+</div>
+
+<div class="titulo-ceu">clique nas estrelas</div>
+
+<script>
+  // ============================================
+  // SUAS ESTRELAS — edite nome e mensagem aqui
+  // ============================================
+  const estrelas = [
+    {
+      nome: "Estrela 1",
+      mensagem: "Rodrigo, vaia amerda!.",
+      x: 18, y: 22,
+      tamanho: 22
+    },
+    {
+      nome: "Estrela 2",
+      mensagem: "CHUPADOR MASTER VOCÊ.",
+      x: 35, y: 15,
+      tamanho: 18
+    },
+    {
+      nome: "Estrela 3",
+      mensagem: "Tamo junto o Pai é monstro.",
+      x: 55, y: 28,
+      tamanho: 20
+    },
+    {
+      nome: "Estrela 4",
+      mensagem: "rolr dr pop 100.",
+      x: 72, y: 12,
+      tamanho: 16
+    },
+    {
+      nome: "Estrela 5",
+      mensagem: "Bora viver.",
+      x: 42, y: 45,
+      tamanho: 19
+    },
+    {
+      nome: "Estrela 6",
+      mensagem: "come pastel de queijo.",
+      x: 25, y: 55,
+      tamanho: 17
+    },
+    {
+      nome: "Estrela 7",
+      mensagem: "cafajeste chucro.",
+      x: 65, y: 40,
+      tamanho: 21
+    },
+    {
+      nome: "Estrela 8",
+      mensagem: "cavalo de pau de fiat marea.",
+      x: 82, y: 30,
+      tamanho: 15
+    },
+  ];
+
+  // Gera estrelas de fundo decorativas
+  const bgContainer = document.getElementById('estrelas-bg');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'estrela-bg';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${Math.random()*100}%;
+      width: ${size}px;
+      height: ${size}px;
+      --op: ${Math.random()*0.5+0.2};
+      --dur: ${Math.random()*4+2}s;
+      --delay: ${Math.random()*5}s;
+    `;
+    bgContainer.appendChild(s);
+  }
+
+  // Gera estrelas clicáveis
+  const container = document.getElementById('estrelas-interativas');
+  estrelas.forEach((e, i) => {
+    const el = document.createElement('div');
+    el.className = 'estrela';
+    el.style.left = e.x + '%';
+    el.style.top = e.y + '%';
+    el.innerHTML = `
+      <div class="estrela-corpo">
+        <svg width="${e.tamanho}" height="${e.tamanho}" viewBox="0 0 24 24">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
+            fill="rgba(200,220,255,0.9)" stroke="rgba(200,220,255,0.3)" stroke-width="0.5"/>
+        </svg>
+        <span class="estrela-label">${e.nome}</span>
+      </div>
+    `;
+    el.addEventListener('click', () => abrirModal(e, el));
+    container.appendChild(el);
+  });
+
+  // Modal
+  let estrelaAtiva = null;
+
+  function abrirModal(dados, el) {
+    if (estrelaAtiva) estrelaAtiva.classList.remove('ativa');
+    estrelaAtiva = el;
+    el.classList.add('ativa');
+
+    document.getElementById('card-nome').textContent = dados.nome;
+    document.getElementById('card-texto').textContent = dados.mensagem;
+    document.getElementById('overlay').classList.add('visivel');
+  }
+
+  function fecharModal() {
+    document.getElementById('overlay').classList.remove('visivel');
+    if (estrelaAtiva) {
+      estrelaAtiva.classList.remove('ativa');
+      estrelaAtiva = null;
+    }
+  }
+
+  document.getElementById('overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('overlay')) fecharModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') fecharModal();
+  });
+</script>
+</body>
+</html>

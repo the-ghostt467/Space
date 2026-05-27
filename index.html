@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espaço Protegido</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0a0a16; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; color: white;">
+
+    <div style="text-align: center; background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 15px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="margin-bottom: 20px; font-weight: 300; letter-spacing: 2px;">Acessar o Céu</h2>
+        <input type="password" id="campo-senha" placeholder="Digite a senha..." style="padding: 12px; border-radius: 8px; border: none; margin-bottom: 20px; text-align: center; font-size: 16px; width: 200px; outline: none;">
+        <br>
+        <button onclick="verificarSenha()" style="padding: 12px 30px; border-radius: 8px; border: none; background: #4a4ae7; color: white; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s;">Entrar</button>
+    </div>
+
+    <script>
+        function verificarSenha() {
+            const senhaCorreta = "manga3"; // ◄ Alterar para a sua senha aqui!
+            const senhaDigitada = document.getElementById("campo-senha").value;
+
+            if (senhaDigitada === senhaCorreta) {
+                // Redireciona para a página das estrelas se acertar
+                window.location.href = "ceu.html";
+            } else {
+                alert("Senha incorreta! Tente novamente.");
+                document.getElementById("campo-senha").value = ""; // Limpa o campo
+            }
+        }
+
+        // Permite apertar "Enter" no teclado para entrar também
+        document.getElementById("campo-senha").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                verificarSenha();
+            }
+        });
+    </script>
+
+</body>
+</html>

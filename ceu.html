@@ -412,19 +412,19 @@
 
   <div id="canvas-container"></div> 
     
-    <audio id="The Weeknd - Call Out My Name (Official Video) - TheWeekndVEVO (youtube).mp3" autoplay loop>
-      <source src="musica.mp3" type="audio/mpeg">
-    </audio>
+   <audio id="musicaFundo" autoplay loop>
+  <source src="The Weeknd - Call Out My Name (Official Video) - TheWeekndVEVO (youtube).mp3" type="audio/mpeg">
+</audio>
 
-    <script>
-      window.addEventListener("DOMContentLoaded", () => {
-        const audio = document.getElementById("musicaFundo");
-        if (audio) {
-          audio.volume = 0.4;
-          audio.play().catch(e => console.log("Aguardando interação:", e));
-        }
-      });
-    </script>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const audio = document.getElementById("musicaFundo");
+    if (audio) {
+      audio.volume = 0.4;
+      audio.play().catch(e => console.log("Aguardando interação:", e));
+    }
+  });
+</script>
 
 </body>
 </html>

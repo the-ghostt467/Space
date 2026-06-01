@@ -254,6 +254,21 @@
       white-space: nowrap;
       z-index: 5;
     }
+/* Estrela cadente */
+.estrela-cadente {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 140px;
+  height: 1.5px;
+  background: linear-gradient(90deg, rgba(248,244,232,0.95), rgba(240,192,96,0.4), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0;
+  transform-origin: left center;
+}
+  
   </style>
 </head>
 <body>
@@ -408,7 +423,45 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') fecharModal();
   });
-</script>
+// ESTRELAS CADENTES
+function criarEstrelaCadente() {
+  const el = document.createElement('div');
+  el.className = 'estrela-cadente';
+
+  const startX = Math.random() * 70;
+  const startY = Math.random() * 40;
+  const angulo = 35 + Math.random() * 15;
+  const duracao = 1200 + Math.random() * 800;
+  const distancia = 300 + Math.random() * 200;
+
+  el.style.left = startX + 'vw';
+  el.style.top = startY + 'vh';
+  el.style.transform = `rotate(${angulo}deg)`;
+
+  el.animate([
+    { transform: `rotate(${angulo}deg) translateX(0)`, opacity: 0 },
+    { transform: `rotate(${angulo}deg) translateX(10px)`, opacity: 1, offset: 0.05 },
+    { transform: `rotate(${angulo}deg) translateX(${distancia}px)`, opacity: 0 }
+  ], { duration: duracao, easing: 'ease-in', fill: 'forwards' });
+
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), duracao + 100);
+}
+
+function agendarProxima() {
+  const intervalo = 3000 + Math.random() * 5000;
+  setTimeout(() => {
+    criarEstrelaCadente();
+    if (Math.random() > 0.6) {
+      setTimeout(criarEstrelaCadente, 400 + Math.random() * 600);
+    }
+    agendarProxima();
+  }, intervalo);
+}
+
+agendarProxima();
+
+                    </script>
 
   <div id="canvas-container"></div> 
     

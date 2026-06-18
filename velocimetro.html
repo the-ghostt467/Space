@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>O quanto eu gosto de você?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Raleway:wght@200;300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --azul-profundo: #020818;
+      --azul-medio: #0a1628;
+      --dourado: #f0c060;
+      --prata: #c8d8f0;
+      --azul-painel: #2fc6ff;
+      --laranja-alerta: #ff5e3a;
+    }
+
+    body {
+      background: radial-gradient(ellipse at 50% 0%, #0d1f4a 0%, #060f28 40%, var(--azul-profundo) 100%);
+      min-height: 100vh;
+      font-family: 'Raleway', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .pergunta {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 22px;
+      color: var(--prata);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .painel {
+      background: var(--azul-medio);
+      border: 1px solid rgba(47, 198, 255, 0.25);
+      border-radius: 16px;
+      padding: 20px 12px 28px;
+      box-shadow: 0 0 30px rgba(47, 198, 255, 0.08), inset 0 0 40px rgba(2, 8, 24, 0.6);
+    }
+
+    .cluster {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .gauge-side { flex: 0 0 19%; }
+    .gauge-main { flex: 0 0 62%; }
+
+    .cluster svg { display: block; width: 100%; }
+
+    #gauge {
+      touch-action: none;
+      cursor: grab;
+    }
+
+    #gauge:active { cursor: grabbing; }
+
+    .confirmar {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dourado);
+      background: none;
+      border: 1px solid rgba(240, 192, 96, 0.4);
+      padding: 12px 32px;
+      cursor: pointer;
+      border-radius: 2px;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .confirmar:hover {
+      background: rgba(240, 192, 96, 0.08);
+      border-color: var(--dourado);
+    }
+
+    .confirmar:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .revelacao {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 20px;
+      color: var(--dourado);
+      margin-top: 24px;
+      line-height: 1.7;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .revelacao.visivel { opacity: 1; }
+
+    .voltar {
+      display: inline-block;
+      margin-top: 32px;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(200, 216, 240, 0.35);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(200, 216, 240, 0.15);
+      padding-bottom: 4px;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .voltar:hover {
+      color: var(--prata);
+      border-color: rgba(200, 216, 240, 0.4);
+    }
+
+    @keyframes tremor {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-6px) rotate(-1deg); }
+      30% { transform: translateX(5px) rotate(1deg); }
+      45% { transform: translateX(-4px); }
+      60% { transform: translateX(3px); }
+      75% { transform: translateX(-2px); }
+    }
+
+    .tremor { animation: tremor 0.5s ease; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="pergunta">O quanto você acha que eu gosto de você?</p>
+
+    <div class="painel" id="painel">
+      <div class="cluster">
+
+        <!-- Gauge esquerdo: "Paixão" (estilo combustível) -->
+        <svg class="gauge-side" viewBox="0 0 160 170">
+          <path d="M 20 110 A 60 60 0 0 1 131.96 80" fill="none" stroke="#2fc6ff" stroke-width="10" stroke-linecap="round" opacity="0.8"/>
+          <path d="M 131.96 80 A 60 60 0 0 1 140 110" fill="none" stroke="#ff5e3a" stroke-width="10" stroke-linecap="round" opacity="0.8"/>
+          <text x="14" y="124" text-anchor="middle" font-family="Raleway" font-size="12" fill="rgba(200,216,240,0.55)">E</text>
+          <text x="146" y="124" text-anchor="middle" font-family="Raleway" font-size="12" fill="rgba(200,216,240,0.55)">F</text>
+          <g>
+            <line x1="80" y1="110" x2="128.3" y2="97.06" stroke="#f8f4e8" stroke-width="4" stroke-linecap="round" style="filter:drop-shadow(0 0 2px #ff5e3a)"/>
+            <circle cx="80" cy="110" r="6" fill="#f8f4e8"/>
+            <animateTransform attributeName="transform" type="rotate" values="-3 80 110;3 80 110;-3 80 110" dur="4s" repeatCount="indefinite"/>
+          </g>
+          <text x="80" y="155" text-anchor="middle" font-family="Raleway" font-size="12" letter-spacing="2" fill="rgba(200,216,240,0.45)">PAIXÃO</text>
+        </svg>
+
+        <!-- Gauge central: o medidor de amor (interativo) -->
+        <svg id="gauge" viewBox="-15 -10 430 420" role="img">
+          <title>Medidor de amor</title>
+          <desc>Arraste o ponteiro para indicar seu palpite de 0 a 100, depois confirme</desc>
+
+          <path d="M 93.93 306.07 A 150 150 0 1 1 306.07 306.07" fill="none" stroke="#2fc6ff" stroke-width="14" stroke-linecap="round" opacity="0.85"/>
+          <path d="M 306.07 306.07 A 150 150 0 0 1 186.93 349.43" fill="none" stroke="#ff5e3a" stroke-width="14" stroke-linecap="round" opacity="0.85"/>
+
+          <!-- ticks maiores -->
+          <line x1="88.28" y1="311.72" x2="76.96" y2="323.04" stroke="rgba(200,216,240,0.5)" stroke-width="2.5"/>
+          <text x="62.11" y="337.89" text-anchor="middle" dominant-baseline="central" font-family="Raleway" font-size="15" fill="rgba(200,216,240,0.55)">0</text>
+
+          <line x1="43.95" y1="175.28" x2="28.14" y2="172.78" stroke="rgba(200,216,240,0.5)" stroke-width="2.5"/>
+          <text x="7.4" y="169.5" text-anchor="middle" dominant-baseline="central" font-family="Raleway" font-size="15" fill="rgba(200,216,240,0.55)">20</text>
+
+          <line x1="128.27" y1="59.22" x2="121.01" y2="44.96" stroke="rgba(200,216,240,0.5)" stroke-width="2.5"/>
+          <text x="111.47" y="26.25" text-anchor="middle" dominant-baseline="central" font-family="Raleway" font-size="15" fill="rgba(200,216,240,0.55)">40</text>
+
+          <line x1="271.73" y1="59.22" x2="278.99" y2="44.96" stroke="rgba(200,216,240,0.5)" stroke-width="2.5"/>
+          <text x="288.53" y="26.25" text-anchor="middle" dominant-baseline="central" font-family="Raleway" font-size="15" fill="rgba(200,216,240,0.55)">60</text>
+
+          <line x1="356.05" y1="175.28" x2="371.86" y2="172.78" stroke="rgba(200,216,240,0.5)" stroke-width="2.5"/>
+          <text x="392.6" y="169.5" text-anchor="middle" dominant-baseline="central" font-family="Raleway" font-size="15" fill="rgba(200,216,240,0.55)">80</text>
+
+          <line x1="311.72" y1="311.72" x2="323.04" y2="323.04" stroke="rgba(200,216,240,0.5)" stroke-width="2.5"/>
+          <text x="337.89" y="337.89" text-anchor="middle" dominant-baseline="central" font-family="Raleway" font-size="15" fill="rgba(200,216,240,0.55)">100</text>
+
+          <!-- ticks menores -->
+          <line x1="49.73" y1="248.82" x2="40.22" y2="251.91" stroke="rgba(200,216,240,0.35)" stroke-width="1.5"/>
+          <line x1="72.18" y1="107.13" x2="64.09" y2="101.25" stroke="rgba(200,216,240,0.35)" stroke-width="1.5"/>
+          <line x1="200" y1="42" x2="200" y2="32" stroke="rgba(200,216,240,0.35)" stroke-width="1.5"/>
+          <line x1="327.82" y1="107.13" x2="335.91" y2="101.25" stroke="rgba(200,216,240,0.35)" stroke-width="1.5"/>
+          <line x1="350.27" y1="248.82" x2="359.78" y2="251.91" stroke="rgba(200,216,240,0.35)" stroke-width="1.5"/>
+
+          <!-- zona vermelha / infinito -->
+          <line x1="266.77" y1="343.2" x2="273.54" y2="357.7" stroke="#ff5e3a" stroke-width="1.5" opacity="0.6"/>
+          <line x1="227.44" y1="355.6" x2="230.21" y2="371.36" stroke="#ff5e3a" stroke-width="1.5" opacity="0.6"/>
+          <line x1="186.23" y1="357.4" x2="184.83" y2="373.34" stroke="#ff5e3a" stroke-width="2.5"/>
+          <text x="183.88" y="384.3" text-anchor="middle" dominant-baseline="central" font-family="Raleway" font-size="20" fill="#ff5e3a" style="filter:drop-shadow(0 0 4px rgba(255,94,58,0.7))">∞</text>
+
+          <!-- nome -->
+          <text x="200" y="135" text-anchor="middle" font-family="Raleway" font-size="22" font-weight="200" letter-spacing="4" fill="rgba(200,216,240,0.5)">AMÔMETRO</text>
+
+          <!-- display digital -->
+          <rect x="150" y="255" width="100" height="42" rx="4" fill="#020818" stroke="#2fc6ff" stroke-width="1.5" opacity="0.9"/>
+          <text x="200" y="266" text-anchor="middle" font-family="Raleway" font-size="9" letter-spacing="2" fill="rgba(47,198,255,0.6)">NÍVEL</text>
+          <text id="readout" x="200" y="286" text-anchor="middle" dominant-baseline="central" font-family="Raleway" font-size="20" letter-spacing="2" fill="#2fc6ff" style="filter:drop-shadow(0 0 4px rgba(47,198,255,0.8))">0%</text>
+
+          <!-- ponteiro -->
+          <line id="needle" x1="200" y1="200" x2="108.08" y2="291.92" stroke="#ff5e3a" stroke-width="6" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(255,94,58,0.7))"/>
+          <circle cx="200" cy="200" r="16" fill="none" stroke="#2fc6ff" stroke-width="2"/>
+          <circle cx="200" cy="200" r="11" fill="#ff5e3a"/>
+        </svg>
+
+        <!-- Gauge direito: barra "sempre no máximo" -->
+        <svg class="gauge-side" viewBox="0 0 100 220">
+          <text x="50" y="28" text-anchor="middle" font-size="24" fill="#ff5e3a" style="filter:drop-shadow(0 0 4px rgba(255,94,58,0.6))">♥</text>
+          <rect x="20" y="45" width="60" height="22" rx="4" fill="#ff5e3a" opacity="0.95" style="filter:drop-shadow(0 0 3px rgba(255,94,58,0.6))"/>
+          <rect x="20" y="71" width="60" height="22" rx="4" fill="#ff5e3a" opacity="0.95" style="filter:drop-shadow(0 0 3px rgba(255,94,58,0.6))"/>
+          <rect x="20" y="97" width="60" height="22" rx="4" fill="#ff5e3a" opacity="0.85" style="filter:drop-shadow(0 0 3px rgba(255,94,58,0.5))"/>
+          <rect x="20" y="123" width="60" height="22" rx="4" fill="#2fc6ff" opacity="0.85" style="filter:drop-shadow(0 0 3px rgba(47,198,255,0.5))"/>
+          <rect x="20" y="149" width="60" height="22" rx="4" fill="#2fc6ff" opacity="0.85" style="filter:drop-shadow(0 0 3px rgba(47,198,255,0.5))"/>
+          <rect x="20" y="175" width="60" height="22" rx="4" fill="#2fc6ff" opacity="0.85" style="filter:drop-shadow(0 0 3px rgba(47,198,255,0.5))"/>
+          <text x="50" y="212" text-anchor="middle" font-family="Raleway" font-size="12" letter-spacing="2" fill="rgba(200,216,240,0.45)">MAX</text>
+        </svg>
+
+      </div>
+
+      <button class="confirmar" id="confirmar">confirmar palpite</button>
+      <p class="revelacao" id="revelacao">Não tem unidade de medida pra isso.<br>Só sei que não tem fim.</p>
+    </div>
+
+    <a href="index.html" class="voltar">voltar ao céu</a>
+  </div>
+
+  <script>
+    (function(){
+      var svg = document.getElementById('gauge');
+      var needle = document.getElementById('needle');
+      var readout = document.getElementById('readout');
+      var confirmar = document.getElementById('confirmar');
+      var revelacao = document.getElementById('revelacao');
+      var painel = document.getElementById('painel');
+      var cx = 200, cy = 200, needleLen = 130;
+      var VB_X = -15, VB_Y = -10, VB_W = 430;
+      var value = 0;
+      var dragging = false;
+      var confirmed = false;
+
+      function setNeedleAngle(thetaDeg){
+        var a = thetaDeg * Math.PI / 180;
+        needle.setAttribute('x2', (cx + needleLen * Math.cos(a)).toFixed(2));
+        needle.setAttribute('y2', (cy - needleLen * Math.sin(a)).toFixed(2));
+      }
+
+      function thetaForValue(v){ return 225 - v * 2.7; }
+
+      function setValue(v){
+        value = Math.max(0, Math.min(100, v));
+        setNeedleAngle(thetaForValue(value));
+        readout.textContent = Math.round(value) + '%';
+      }
+
+      function valueFromAngle(phi){
+        // gap inferior do mostrador (sem escala)
+        if (phi > -135 && phi < -45) {
+          return phi > -90 ? 100 : 0;
+        }
+        var theta = phi >= -45 ? phi : phi + 360;
+        var v = (225 - theta) / 2.7;
+        return Math.max(0, Math.min(100, v));
+      }
+
+      function valueFromPointer(clientX, clientY){
+        var rect = svg.getBoundingClientRect();
+        var scale = VB_W / rect.width;
+        var px = VB_X + (clientX - rect.left) * scale;
+        var py = VB_Y + (clientY - rect.top) * scale;
+        var phi = Math.atan2(-(py - cy), px - cx) * 180 / Math.PI;
+        return valueFromAngle(phi);
+      }
+
+      function startDrag(e){
+        if (confirmed) return;
+        dragging = true;
+        moveHandler(e);
+        if (e.cancelable) e.preventDefault();
+      }
+
+      function moveHandler(e){
+        if (!dragging) return;
+        var point = e.touches ? e.touches[0] : e;
+        setValue(valueFromPointer(point.clientX, point.clientY));
+        if (e.cancelable) e.preventDefault();
+      }
+
+      function endDrag(){ dragging = false; }
+
+      svg.addEventListener('mousedown', startDrag);
+      svg.addEventListener('touchstart', startDrag, { passive: false });
+      window.addEventListener('mousemove', moveHandler);
+      window.addEventListener('touchmove', moveHandler, { passive: false });
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('touchend', endDrag);
+
+      setValue(0);
+
+      confirmar.addEventListener('click', function(){
+        if (confirmed) return;
+        confirmed = true;
+        confirmar.disabled = true;
+        confirmar.textContent = 'calculando...';
+
+        var thetaStart = thetaForValue(value);
+        var thetaEnd = -95;
+        var duration = 1600;
+        var startTime = performance.now();
+
+        function step(now){
+          var t = Math.min(1, (now - startTime) / duration);
+          var eased = 1 - Math.pow(1 - t, 3);
+          var theta = thetaStart + (thetaEnd - thetaStart) * eased;
+          setNeedleAngle(theta);
+          var vEquiv = (225 - theta) / 2.7;
+          readout.textContent = vEquiv <= 100 ? (Math.round(vEquiv) + '%') : '∞';
+          if (t < 1) {
+            requestAnimationFrame(step);
+          } else {
+            confirmar.style.display = 'none';
+            revelacao.classList.add('visivel');
+            painel.classList.add('tremor');
+          }
+        }
+        requestAnimationFrame(step);
+      });
+    })();
+  </script>
+</body>
+</html>

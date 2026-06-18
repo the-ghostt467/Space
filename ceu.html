@@ -435,7 +435,13 @@
         <span class="estrela-label">${e.nome}</span>
       </div>
     `;
-    el.addEventListener('click', () => abrirModal(e, el));
+    el.addEventListener('click', () => {
+  if (i === 7) {
+    window.open('velocimetro.html', '_blank');
+  } else {
+    abrirModal(e, el);
+  }
+});
     container.appendChild(el);
   });
 

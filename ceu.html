@@ -269,6 +269,50 @@
   transform-origin: left center;
 }
   
+  .radio {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(10, 22, 40, 0.85);
+  border: 1px solid rgba(240, 192, 96, 0.35);
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 0 18px rgba(240, 192, 96, 0.15);
+  backdrop-filter: blur(6px);
+  z-index: 20;
+}
+.radio-display {
+  background: #000;
+  color: var(--dourado);
+  font-family: monospace;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+  max-width: 220px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.radio-controls button {
+  background: transparent;
+  border: 1px solid var(--dourado);
+  color: var(--dourado);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  margin: 0 2px;
+  font-size: 1rem;
+}
+.radio-controls button:hover {
+  background: rgba(240, 192, 96, 0.12);
+}
+#progressBar {
+  width: 100%;
+  accent-color: var(--dourado);
+  margin-top: 8px;
+}
   </style>
 </head>
 <body>
@@ -463,21 +507,81 @@ agendarProxima();
 
                     </script>
 
-  <div id="canvas-container"></div> 
-    
-   <audio id="musicaFundo" autoplay loop>
-  <source src="The Weeknd - Call Out My Name (Official Video) - TheWeekndVEVO (youtube).mp3" type="audio/mpeg">
-</audio>
+  <div id="canvas-container"></div>
 
-<script>
-  window.addEventListener("DOMContentLoaded", () => {
-    const audio = document.getElementById("musicaFundo");
-    if (audio) {
-      audio.volume = 0.4;
-      audio.play().catch(e => console.log("Aguardando interação:", e));
+  <div class="radio">
+      <div class="radio-display">
+          <span id="song-name">I LOVE YOU</span>
+      </div>
+      <div class="radio-controls">
+          <button onclick="prevSong()">⏮</button>
+          <button id="playBtn" onclick="togglePlay()">▶</button>
+          <button onclick="nextSong()">⏭</button>
+      </div>
+      <div class="progress-container">
+        <input type="range" id="progressBar" value="0" min="0" max="100" step="0.1">
+      </div>
+      <audio id="player"></audio>
+  </div>
+
+  <script>
+    const songs = [
+      { name: "The Weeknd, JENNIE & Lily Rose Depp - One Of The Girls (Official Audio) - The Weeknd (128k)", file: "The Weeknd, JENNIE & Lily Rose Depp - One Of The Girls (Official Audio) - The Weeknd (128k).mp3" },
+      { name: "Metro Boomin, The Weeknd, 21 Savage - Creepin - LatinHype (128k)", file: "Metro Boomin, The Weeknd, 21 Savage - Creepin - LatinHype (128k).mp3" },
+      { name: "The Weeknd - Call Out My Name (Official Video) - TheWeekndVEVO (youtube)", file: "The Weeknd - Call Out My Name (Official Video) - TheWeekndVEVO (youtube).mp3" }
+    ];
+
+    let current = 0;
+    let playing = false;
+    const player = document.getElementById('player');
+    const songName = document.getElementById('song-name');
+    const progressBar = document.getElementById('progressBar');
+    const playBtn = document.getElementById('playBtn');
+
+    function loadSong(i) {
+      player.src = songs[i].file;
+      songName.textContent = songs[i].name;
     }
-  });
-</script>
+
+    function togglePlay() {
+      if (playing) {
+        player.pause();
+        playing = false;
+        playBtn.textContent = '▶';
+      } else {
+        if (!player.src || player.src === "") {
+          loadSong(current);
+        }
+        player.play();
+        playing = true;
+        playBtn.textContent = '⏸';
+      }
+    }
+
+    function nextSong() {
+      current = (current + 1) % songs.length;
+      loadSong(current);
+      if (playing) player.play();
+    }
+
+    function prevSong() {
+      current = (current - 1 + songs.length) % songs.length;
+      loadSong(current);
+      if (playing) player.play();
+    }
+
+    player.addEventListener('timeupdate', () => {
+      if (player.duration) {
+        progressBar.value = (player.currentTime / player.duration) * 100;
+      }
+    });
+
+    progressBar.addEventListener('input', () => {
+      if (player.duration) {
+        player.currentTime = (progressBar.value / 100) * player.duration;
+      }
+    });
+  </script>
 
 </body>
-</html>
+</html> 

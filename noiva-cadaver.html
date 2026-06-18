@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sob a lua cheia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Raleway:wght@200;300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --dourado: #e8a52a;
+      --prata: #c8d8f0;
+    }
+
+    body {
+      background: #0a1f28;
+      min-height: 100vh;
+      font-family: 'Raleway', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .cena {
+      background: linear-gradient(to bottom, #0d2e3a 0%, #134452 45%, #0a1f28 100%);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      height: 440px;
+    }
+
+    .cena svg {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .dica {
+      text-align: center;
+      font-family: 'Raleway', sans-serif;
+      font-size: 11px;
+      color: rgba(200, 216, 240, 0.4);
+      margin-top: 10px;
+    }
+
+    .frase-espaco {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.7;
+      color: var(--prata);
+      margin: 28px 0 0;
+      padding: 0 12px;
+      min-height: 1.7em;
+    }
+
+    .linha {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+      margin: 24px auto 0;
+    }
+
+    .voltar {
+      display: inline-block;
+      margin-top: 28px;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(200, 216, 240, 0.35);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(200, 216, 240, 0.15);
+      padding-bottom: 4px;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .voltar:hover {
+      color: var(--prata);
+      border-color: rgba(200, 216, 240, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="cena">
+      <svg viewBox="0 0 480 440" role="img">
+        <title>Cena animada inspirada em A Noiva Cadáver</title>
+        <desc>Silhuetas de um casal sob a lua cheia, em um cemitério com lápides, cerca de ferro, árvores retorcidas, corvos, morcegos e borboletas. Elementos clicáveis: vela, lua e rosa azul.</desc>
+
+        <circle id="lua" cx="240" cy="125" r="80" fill="#f0e8c8" style="cursor:pointer;"/>
+
+        <g stroke="#08161c" stroke-width="3" fill="none" opacity="0.9">
+          <path d="M390 50 C415 25 435 35 448 12 C458 -5 478 0 485 -15"/>
+          <path d="M390 50 C400 70 422 65 432 88"/>
+          <path d="M390 50 C375 60 365 78 368 95"/>
+          <path d="M40 65 C18 40 0 48 -12 25"/>
+          <path d="M40 65 C55 82 50 105 65 118"/>
+          <path d="M40 65 C28 80 28 100 38 115"/>
+        </g>
+        <g stroke="#08161c" stroke-width="1" fill="none" opacity="0.7">
+          <path d="M448 12 L452 -8 M448 12 L460 0 M448 12 L438 -2"/>
+          <path d="M458 -5 L462 -18 M458 -5 L470 -8"/>
+        </g>
+
+        <g fill="#06141a" opacity="0.9">
+          <path d="M412 30 C408 26 410 22 414 23 C416 19 421 19 422 23 C426 22 428 26 424 29 C422 32 416 32 412 30 Z"/>
+        </g>
+        <g stroke="#06141a" stroke-width="1.5" fill="none" opacity="0.7">
+          <path d="M412 30 L409 33 M412 30 L412 35"/>
+        </g>
+
+        <g id="morcegos" fill="#06141a" opacity="0.9"></g>
+        <g id="borboletas" fill="#08161c" opacity="0.85"></g>
+
+        <g transform="translate(372,90)" opacity="0.85">
+          <ellipse cx="0" cy="6" rx="13" ry="7" fill="#06141a"/>
+          <path d="M-12,3 C-18,-2 -14,-8 -8,-6 Z" fill="#06141a"/>
+          <path d="M12,3 C18,-2 14,-8 8,-6 Z" fill="#06141a"/>
+          <ellipse cx="0" cy="-2" rx="6" ry="5" fill="#06141a"/>
+          <path d="M-5,-3 L-9,-6 M5,-3 L9,-6" stroke="#06141a" stroke-width="2"/>
+        </g>
+        <g transform="translate(95,55) scale(0.85)" opacity="0.8">
+          <ellipse cx="0" cy="6" rx="13" ry="7" fill="#06141a"/>
+          <path d="M-12,3 C-18,-2 -14,-8 -8,-6 Z" fill="#06141a"/>
+          <path d="M12,3 C18,-2 14,-8 8,-6 Z" fill="#06141a"/>
+          <ellipse cx="0" cy="-2" rx="6" ry="5" fill="#06141a"/>
+        </g>
+
+        <g id="figuras">
+          <g id="victor" transform="translate(190,300)">
+            <ellipse cx="0" cy="118" rx="36" ry="6" fill="#020a0d" opacity="0.4"/>
+            <path id="victor-corpo" d="M-4,-95 C-5,-95 -9,-60 -7,-20 L-10,40 L-10,115 L-4,115 L-2,45 L4,45 L7,115 L13,115 L10,40 L12,-20 C14,-60 7,-95 7,-95 Z" fill="#08161c"/>
+            <path d="M-10,40 L-13,46 L-9,48 Z" fill="#08161c"/>
+            <path d="M10,40 L13,46 L9,48 Z" fill="#08161c"/>
+            <circle cx="0" cy="-108" r="13" fill="#08161c"/>
+            <path d="M-13,-119 C-13,-130 -3,-136 5,-131 C13,-128 15,-118 13,-111 C8,-114 2,-116 -3,-115 C-8,-114 -11,-117 -13,-119 Z" fill="#08161c"/>
+            <path id="victor-braco" d="M-7,-75 C-23,-65 -35,-50 -39,-35 C-40,-32 -37,-30 -35,-32 C-29,-45 -17,-58 -4,-65 Z" fill="#08161c"/>
+            <path d="M7,-75 C15,-65 19,-50 18,-38 L12,-38 C12,-50 9,-62 3,-70 Z" fill="#08161c"/>
+            <rect x="-9" y="-58" width="18" height="3" fill="#08161c" opacity="0.5"/>
+            <rect x="-9" y="-40" width="18" height="3" fill="#08161c" opacity="0.5"/>
+          </g>
+
+          <g id="noiva" transform="translate(290,295)">
+            <ellipse cx="0" cy="120" rx="46" ry="7" fill="#020a0d" opacity="0.4"/>
+            <path d="M-33,118 C-40,80 -36,40 -21,5 L21,5 C36,40 40,80 33,118 Z" fill="#08161c"/>
+            <path d="M-26,60 C-30,80 -28,100 -24,116 L-18,116 C-21,98 -22,78 -19,58 Z" fill="#0a1c22" opacity="0.6"/>
+            <path d="M-13,5 L-10,-55 L10,-55 L13,5 Z" fill="#08161c"/>
+            <circle cx="0" cy="-68" r="12" fill="#08161c"/>
+            <path d="M-12,-79 C-12,-91 -1,-96 7,-90 C14,-86 15,-76 12,-70 C7,-74 1,-76 -4,-75 C-9,-74 -10,-77 -12,-79 Z" fill="#08161c"/>
+            <path d="M-14,-66 C-18,-60 -19,-52 -17,-46 L-13,-48 C-14,-54 -13,-60 -10,-65 Z" fill="#08161c" opacity="0.8"/>
+            <path id="noiva-braco" d="M10,-50 C23,-45 33,-34 37,-20 C38,-17 35,-15 33,-17 C28,-29 18,-39 7,-43 Z" fill="#08161c"/>
+            <path d="M-10,-50 C-19,-44 -25,-34 -26,-24 L-20,-24 C-19,-33 -14,-42 -5,-47 Z" fill="#08161c"/>
+            <path id="vestido-cauda" d="M30,28 C54,42 70,68 64,96 C58,118 36,120 33,118 C40,80 36,40 30,28 Z" fill="#0a1c22" opacity="0.85"/>
+            <path d="M36,50 C48,62 54,80 50,98" stroke="#1a3a45" stroke-width="2" fill="none" opacity="0.6"/>
+          </g>
+
+          <g id="buque" transform="translate(228,225)" opacity="0">
+            <circle cx="0" cy="0" r="4" fill="#08161c"/>
+            <circle cx="6" cy="-4" r="4" fill="#08161c"/>
+            <circle cx="-5" cy="-5" r="4" fill="#08161c"/>
+            <circle cx="2" cy="-9" r="4" fill="#08161c"/>
+            <circle cx="-7" cy="2" r="4" fill="#08161c"/>
+            <line x1="0" y1="2" x2="2" y2="14" stroke="#08161c" stroke-width="2"/>
+          </g>
+        </g>
+
+        <g transform="translate(60,400)" opacity="0.85">
+          <path d="M-14,0 L-14,-22 C-14,-30 14,-30 14,-22 L14,0 Z" fill="#08161c"/>
+          <line x1="-6" y1="-12" x2="6" y2="-12" stroke="#134452" stroke-width="2"/>
+          <line x1="0" y1="-18" x2="0" y2="-6" stroke="#134452" stroke-width="2"/>
+        </g>
+        <g transform="translate(95,408)" opacity="0.75">
+          <path d="M-10,0 L-10,-15 L10,-15 L10,0 Z" fill="#08161c"/>
+        </g>
+        <g transform="translate(410,395)" opacity="0.8">
+          <path d="M-12,0 C-12,-24 12,-24 12,0 Z" fill="#08161c"/>
+        </g>
+        <g transform="translate(445,405)" opacity="0.7">
+          <path d="M-9,0 L-9,-13 L9,-13 L9,0 Z" fill="#08161c"/>
+        </g>
+
+        <g stroke="#06141a" stroke-width="2" opacity="0.6" fill="none">
+          <path d="M5 415 L5 395 M5 395 L0 388 M5 395 L10 388"/>
+          <path d="M22 415 L22 395 M22 395 L17 388 M22 395 L27 388"/>
+          <line x1="5" y1="400" x2="22" y2="400"/>
+          <line x1="5" y1="408" x2="22" y2="408"/>
+          <path d="M455 415 L455 395 M455 395 L450 388 M455 395 L460 388"/>
+          <path d="M472 415 L472 395 M472 395 L467 388 M472 395 L477 388"/>
+          <line x1="455" y1="400" x2="472" y2="400"/>
+          <line x1="455" y1="408" x2="472" y2="408"/>
+        </g>
+
+        <g id="grupo-tres" transform="translate(140,358)" style="cursor:pointer;">
+          <rect x="-2" y="-30" width="6" height="30" fill="#08161c"/>
+          <path d="M-14,0 C-14,4 14,4 14,0 L10,-3 L-10,-3 Z" fill="#08161c"/>
+          <ellipse id="chama" cx="1" cy="-34" rx="5" ry="8" fill="#e8a52a" style="transform-origin:1px -30px;"/>
+        </g>
+
+        <g id="rosa" transform="translate(340,362)" style="cursor:pointer;">
+          <path d="M0,0 C-3,8 -2,16 0,24 C2,32 0,38 0,38" stroke="#1a3a25" stroke-width="3" fill="none"/>
+          <path d="M-3,14 C-8,12 -11,16 -10,20" stroke="#1a3a25" stroke-width="2" fill="none"/>
+          <g id="petalas-rosa" transform="translate(0,-2)">
+            <circle cx="0" cy="0" r="9" fill="#1a3a6e"/>
+          </g>
+        </g>
+
+        <rect x="0" y="400" width="480" height="40" fill="#06141a"/>
+        <g stroke="#08161c" stroke-width="3" fill="none">
+          <path d="M30 400 L30 420 M50 400 L50 420 M70 400 L70 420"/>
+          <path d="M210 400 L210 415 M230 400 L230 415"/>
+          <path d="M390 400 L390 418 M410 400 L410 418 M430 400 L430 418"/>
+        </g>
+
+        <g stroke="#08161c" stroke-width="1.5" opacity="0.55" fill="none">
+          <path d="M250 60 L320 30"/>
+          <path d="M250 60 L300 75"/>
+          <path d="M250 60 L280 100"/>
+          <path d="M260 70 L300 75"/>
+          <path d="M270 85 L280 100"/>
+          <path d="M275 50 L320 30"/>
+        </g>
+      </svg>
+    </div>
+
+    <p class="dica">toque na vela, na lua ou na rosa</p>
+
+    <div class="linha"></div>
+    <p class="frase-espaco">
+      <!-- escreva sua frase aqui -->
+    </p>
+
+    <a href="index.html" class="voltar">voltar ao céu</a>
+  </div>
+
+  <script>
+    (function(){
+      var ns = "http://www.w3.org/2000/svg";
+      var grupo = document.getElementById('borboletas');
+      for (var i = 0; i < 6; i++) {
+        var b = document.createElementNS(ns, 'path');
+        var x = 40 + Math.random()*400;
+        var y = 200 + Math.random()*150;
+        b.setAttribute('d', 'M0,0 C-6,-6 -10,0 -6,4 C-2,6 0,2 0,2 C0,2 2,6 6,4 C10,0 6,-6 0,0 Z');
+        b.setAttribute('transform', 'translate(' + x + ',' + y + ')');
+        grupo.appendChild(b);
+        var dur = 6 + Math.random()*5;
+        var delay = Math.random()*4;
+        b.style.animation = 'voar' + (i%3) + ' ' + dur + 's ease-in-out ' + delay + 's infinite';
+      }
+
+      var morcegoGrupo = document.getElementById('morcegos');
+      for (var j = 0; j < 4; j++) {
+        var m = document.createElementNS(ns, 'path');
+        var mx = 60 + Math.random()*360;
+        var my = 30 + Math.random()*60;
+        m.setAttribute('d', 'M0,0 C-10,-6 -18,-2 -20,4 C-12,2 -6,3 0,6 C6,3 12,2 20,4 C18,-2 10,-6 0,0 Z');
+        m.setAttribute('transform', 'translate(' + mx + ',' + my + ')');
+        morcegoGrupo.appendChild(m);
+        var mdur = 8 + Math.random()*6;
+        var mdelay = Math.random()*5;
+        m.style.animation = 'voarMorcego' + (j%2) + ' ' + mdur + 's ease-in-out ' + mdelay + 's infinite';
+      }
+
+      var victor = document.getElementById('victor');
+      var noiva = document.getElementById('noiva');
+      var buque = document.getElementById('buque');
+
+      var poses = [
+        { v: 'translate(190,300)', n: 'translate(290,295)', b: 0 },
+        { v: 'translate(195,300) rotate(3 0 0)', n: 'translate(280,295) rotate(-3 0 0)', b: 0.4 },
+        { v: 'translate(205,300)', n: 'translate(270,295)', b: 1 },
+        { v: 'translate(195,300) rotate(-3 0 0)', n: 'translate(280,295) rotate(3 0 0)', b: 0.4 },
+      ];
+      var idx = 0;
+      function proximaPose(){
+        idx = (idx + 1) % poses.length;
+        var p = poses[idx];
+        victor.style.transition = 'transform 1.8s ease-in-out';
+        noiva.style.transition = 'transform 1.8s ease-in-out';
+        victor.setAttribute('transform', p.v);
+        noiva.setAttribute('transform', p.n);
+        buque.style.transition = 'opacity 1.2s ease';
+        buque.style.opacity = p.b;
+      }
+      setInterval(proximaPose, 2400);
+
+      var vela = document.getElementById('grupo-tres');
+      var chama = document.getElementById('chama');
+      var velaApagada = false;
+      vela.addEventListener('click', function(){
+        velaApagada = !velaApagada;
+        chama.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        chama.style.opacity = velaApagada ? '0' : '1';
+      });
+
+      var lua = document.getElementById('lua');
+      var fases = ['#f0e8c8', '#d8c8a0', '#8c7850', '#3a3020'];
+      var faseIdx = 0;
+      lua.addEventListener('click', function(){
+        faseIdx = (faseIdx + 1) % fases.length;
+        lua.style.transition = 'fill 0.6s ease';
+        lua.setAttribute('fill', fases[faseIdx]);
+      });
+
+      var rosaGrupo = document.getElementById('rosa');
+      var petalas = document.getElementById('petalas-rosa');
+      var rosaAberta = false;
+      rosaGrupo.addEventListener('click', function(){
+        rosaAberta = !rosaAberta;
+        if (rosaAberta) {
+          petalas.innerHTML = '<circle cx="0" cy="0" r="6" fill="#1a3a6e"/>' +
+            '<ellipse cx="-9" cy="-3" rx="7" ry="5" fill="#2a4a7e" transform="rotate(-30)"/>' +
+            '<ellipse cx="9" cy="-3" rx="7" ry="5" fill="#2a4a7e" transform="rotate(30)"/>' +
+            '<ellipse cx="-6" cy="7" rx="7" ry="5" fill="#2a4a7e" transform="rotate(-120)"/>' +
+            '<ellipse cx="6" cy="7" rx="7" ry="5" fill="#2a4a7e" transform="rotate(120)"/>';
+        } else {
+          petalas.innerHTML = '<circle cx="0" cy="0" r="9" fill="#1a3a6e"/>';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

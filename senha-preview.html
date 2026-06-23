@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌻</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: radial-gradient(ellipse at 50% 0%, #2a2014 0%, #1a1410 60%, #100c08 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+    }
+
+    #girassois-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .container {
+      text-align: center;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* GIRASSOL GIRANDO */
+    .sunflower {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 28px;
+      animation: spin-slow 12s linear infinite;
+      filter: drop-shadow(0 0 10px rgba(245,215,110,0.5));
+    }
+
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .motion-text {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(15px, 4vw, 22px);
+      font-weight: bold;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #bf80ff;
+      text-shadow:
+        0 0 8px rgba(191,128,255,0.9),
+        0 0 20px rgba(191,128,255,0.5),
+        0 0 40px rgba(191,128,255,0.2);
+      min-height: 2.5em;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 11px;
+      height: 1em;
+      background: #bf80ff;
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: piscar 0.7s step-end infinite;
+      box-shadow: 0 0 8px rgba(191,128,255,0.9);
+    }
+
+    @keyframes piscar {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    @keyframes pulso {
+      0%, 100% {
+        text-shadow: 0 0 8px rgba(191,128,255,0.9), 0 0 20px rgba(191,128,255,0.5), 0 0 40px rgba(191,128,255,0.2);
+      }
+      50% {
+        text-shadow: 0 0 14px rgba(191,128,255,1), 0 0 32px rgba(191,128,255,0.8), 0 0 60px rgba(191,128,255,0.4);
+      }
+    }
+
+    .motion-text.pulsando { animation: pulso 2s ease-in-out infinite; }
+
+    .senha-area {
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      width: 100%;
+      max-width: 280px;
+    }
+    .senha-area.visivel { opacity: 1; }
+
+    .senha-label {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(191,128,255,0.4);
+      margin-bottom: 16px;
+    }
+
+    .senha-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(191,128,255,0.5);
+      color: #bf80ff;
+      font-family: 'Courier New', monospace;
+      font-size: 20px;
+      letter-spacing: 6px;
+      text-align: center;
+      width: 100%;
+      padding: 8px 0;
+      outline: none;
+      caret-color: #bf80ff;
+      text-shadow: 0 0 6px rgba(191,128,255,0.6);
+    }
+
+    .senha-input::placeholder {
+      color: rgba(191,128,255,0.2);
+      letter-spacing: 4px;
+    }
+
+    .btn-entrar {
+      display: block;
+      margin: 28px auto 0;
+      background: transparent;
+      border: 1px solid rgba(191,128,255,0.35);
+      color: #bf80ff;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      padding: 12px 32px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 6px rgba(191,128,255,0.4);
+      box-shadow: 0 0 5px rgba(191,128,255,0.2), 0 0 20px rgba(155,77,255,0.1);
+    }
+
+    .btn-entrar:hover {
+      background: rgba(191,128,255,0.08);
+      border-color: #bf80ff;
+      box-shadow: 0 0 8px rgba(191,128,255,0.5), 0 0 30px rgba(155,77,255,0.3), 0 0 60px rgba(102,0,204,0.2);
+    }
+
+    .erro {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #ff5e3a;
+      text-shadow: 0 0 6px rgba(255,94,58,0.5);
+      margin-top: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .erro.visivel { opacity: 1; }
+
+    .corner {
+      position: fixed;
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      color: rgba(191,128,255,0.12);
+      letter-spacing: 2px;
+    }
+    .corner.tl { top: 16px; left: 16px; }
+    .corner.tr { top: 16px; right: 16px; }
+    .corner.bl { bottom: 16px; left: 16px; }
+    .corner.br { bottom: 16px; right: 16px; }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+
+  <!-- GIRASSÓIS DE FUNDO -->
+  <svg id="girassois-bg" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+    <path d="M152,330 C150,290 148,260 150,200" stroke="#4a6b2a" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M150,280 C135,268 125,255 118,242" stroke="#5a7a35" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="112" cy="238" rx="18" ry="10" fill="#4a6b2a" transform="rotate(-30 112 238)"/>
+    <path d="M150,250 C165,238 175,224 180,210" stroke="#5a7a35" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="184" cy="206" rx="16" ry="9" fill="#4a6b2a" transform="rotate(25 184 206)"/>
+    <path d="M382,330 C380,295 378,270 380,230" stroke="#4a6b2a" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <path d="M380,290 C365,278 355,265 350,252" stroke="#5a7a35" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="344" cy="248" rx="15" ry="8" fill="#4a6b2a" transform="rotate(-25 344 248)"/>
+    <path d="M380,265 C396,253 406,238 410,224" stroke="#5a7a35" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="414" cy="220" rx="14" ry="8" fill="#4a6b2a" transform="rotate(20 414 220)"/>
+    <path d="M490,330 C490,310 488,295 490,270" stroke="#4a6b2a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <g transform="translate(150,195)">
+      <g fill="#c8841f" opacity="0.92"><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(0)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(36)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(72)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(108)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(144)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(180)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(216)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(252)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(288)"/><ellipse cx="0" cy="-78" rx="11" ry="26" transform="rotate(324)"/></g>
+      <g fill="#e8a52a" opacity="0.95"><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(18)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(54)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(90)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(126)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(162)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(198)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(234)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(270)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(306)"/><ellipse cx="0" cy="-68" rx="9" ry="22" transform="rotate(342)"/></g>
+      <circle cx="0" cy="0" r="40" fill="#3a2410"/><g fill="#2a1a0a" opacity="0.85"><circle cx="0" cy="-28" r="3.5"/><circle cx="16" cy="-22" r="3.5"/><circle cx="26" cy="-8" r="3.5"/><circle cx="24" cy="10" r="3.5"/><circle cx="12" cy="24" r="3.5"/><circle cx="-6" cy="28" r="3.5"/><circle cx="-22" cy="18" r="3.5"/><circle cx="-28" cy="2" r="3.5"/><circle cx="-20" cy="-16" r="3.5"/><circle cx="0" cy="0" r="2.5"/></g>
+    </g>
+    <g transform="translate(380,222) scale(0.82)">
+      <g fill="#d89a3a" opacity="0.9"><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(0)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(36)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(72)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(108)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(144)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(180)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(216)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(252)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(288)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(324)"/></g>
+      <g fill="#f0bb4a" opacity="0.92"><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(18)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(54)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(90)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(126)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(162)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(198)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(234)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(270)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(306)"/><ellipse cx="0" cy="-66" rx="8" ry="20" transform="rotate(342)"/></g>
+      <circle cx="0" cy="0" r="38" fill="#3a2410"/><g fill="#2a1a0a" opacity="0.8"><circle cx="0" cy="-24" r="3.2"/><circle cx="14" cy="-19" r="3.2"/><circle cx="22" cy="-7" r="3.2"/><circle cx="20" cy="9" r="3.2"/><circle cx="10" cy="21" r="3.2"/><circle cx="0" cy="0" r="2.5"/></g>
+    </g>
+    <g transform="translate(490,262) scale(0.55)">
+      <g fill="#c8841f" opacity="0.88"><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(0)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(40)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(80)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(120)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(160)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(200)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(240)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(280)"/><ellipse cx="0" cy="-78" rx="10" ry="24" transform="rotate(320)"/></g>
+      <circle cx="0" cy="0" r="36" fill="#4a2e14"/>
+    </g>
+  </svg>
+
+  <span class="corner tl">[ SYS ]</span>
+  <span class="corner tr">v1.0</span>
+  <span class="corner bl">◈</span>
+  <span class="corner br">◈</span>
+
+  <div class="container">
+
+    <!-- GIRASSOL GIRANDO (SVG do código original) -->
+    <svg class="sunflower" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        <ellipse cx="50" cy="18" rx="6" ry="13" fill="#f5d76e" transform="rotate(0 50 50)"/>
+        <ellipse cx="50" cy="18" rx="6" ry="13" fill="#f5d76e" transform="rotate(45 50 50)"/>
+        <ellipse cx="50" cy="18" rx="6" ry="13" fill="#f5d76e" transform="rotate(90 50 50)"/>
+        <ellipse cx="50" cy="18" rx="6" ry="13" fill="#f5d76e" transform="rotate(135 50 50)"/>
+        <ellipse cx="50" cy="18" rx="6" ry="13" fill="#f5c820" transform="rotate(22.5 50 50)"/>
+        <ellipse cx="50" cy="18" rx="6" ry="13" fill="#f5c820" transform="rotate(67.5 50 50)"/>
+        <ellipse cx="50" cy="18" rx="6" ry="13" fill="#f5c820" transform="rotate(112.5 50 50)"/>
+        <ellipse cx="50" cy="18" rx="6" ry="13" fill="#f5c820" transform="rotate(157.5 50 50)"/>
+      </g>
+      <circle cx="50" cy="50" r="17" fill="#6b3a10"/>
+      <circle cx="50" cy="50" r="13" fill="#7d4412"/>
+      <circle cx="46" cy="46" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="50" cy="44" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="54" cy="46" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="44" cy="50" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="48" cy="50" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="52" cy="50" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="56" cy="50" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="46" cy="54" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="50" cy="56" r="1.5" fill="#5a2e08" opacity=".7"/>
+      <circle cx="54" cy="54" r="1.5" fill="#5a2e08" opacity=".7"/>
+    </svg>
+
+    <div class="motion-text" id="motion-text"><span class="cursor"></span></div>
+
+    <div class="senha-area" id="senha-area">
+      <p class="senha-label">acesso restrito</p>
+      <input class="senha-input" id="senha-input" type="password" placeholder="· · · · ·" autocomplete="off"/>
+      <button class="btn-entrar" id="btn-entrar">entrar</button>
+      <p class="erro" id="erro">// senha incorreta</p>
+    </div>
+  </div>
+
+  <script>
+    var texto = "FOI FEITO ESPECIALMENTE PARA VOCÊ";
+    var idx = 0;
+    var motionEl = document.getElementById('motion-text');
+    var senhaArea = document.getElementById('senha-area');
+    var senhaInput = document.getElementById('senha-input');
+    var btnEntrar = document.getElementById('btn-entrar');
+    var erroEl = document.getElementById('erro');
+
+    function digitar(){
+      if(idx <= texto.length){
+        motionEl.innerHTML = texto.slice(0, idx) + '<span class="cursor"></span>';
+        idx++;
+        setTimeout(digitar, idx > texto.length ? 0 : Math.random()*60+40);
+      } else {
+        motionEl.classList.add('pulsando');
+        setTimeout(function(){ senhaArea.classList.add('visivel'); }, 600);
+      }
+    }
+    setTimeout(digitar, 800);
+
+    var SENHA = "estrela";
+    function tentar(){
+      if(senhaInput.value.toLowerCase() === SENHA){
+        window.location.href = 'index.html';
+      } else {
+        erroEl.classList.add('visivel');
+        senhaInput.value = '';
+        setTimeout(function(){ erroEl.classList.remove('visivel'); }, 2000);
+      }
+    }
+    btnEntrar.addEventListener('click', tentar);
+    senhaInput.addEventListener('keydown', function(e){ if(e.key==='Enter') tentar(); });
+  </script>
+</body>
+</html>

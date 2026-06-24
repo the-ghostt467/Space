@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Raleway:wght@200;300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: radial-gradient(ellipse at 50% 0%, #0d1f4a 0%, #060f28 40%, #020818 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      font-family: 'Raleway', sans-serif;
+    }
+
+    .livro {
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+      height: 480px;
+    }
+
+    .pagina {
+      position: absolute;
+      inset: 0;
+      border-radius: 4px 12px 12px 4px;
+      box-shadow: 2px 4px 24px rgba(0,0,0,0.5), inset -3px 0 8px rgba(0,0,0,0.08);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: rotateY(90deg);
+      transform-origin: left center;
+      transition: opacity 0.4s ease, transform 0.5s ease;
+      overflow: hidden;
+    }
+
+    .pagina.ativa {
+      opacity: 1;
+      pointer-events: all;
+      transform: rotateY(0deg);
+    }
+
+    /* CAPA */
+    .pagina-capa {
+      background: #020818;
+      border: 1px solid rgba(240,192,96,0.25);
+      justify-content: flex-start;
+      padding-top: 28px;
+    }
+
+    .capa-estrelas {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .capa-lua {
+      display: block;
+      margin: 0 auto 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .fases-arco {
+      position: relative;
+      z-index: 2;
+      margin: 4px auto 0;
+    }
+
+    .capa-ornamento {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #f0c060, transparent);
+      margin: 14px auto 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .capa-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 20px;
+      color: #f0c060;
+      line-height: 1.5;
+      position: relative;
+      z-index: 2;
+    }
+
+    .capa-sub {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(200,216,240,0.4);
+      margin-top: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* PÁGINAS DE CONTEÚDO */
+    .pagina-conteudo {
+      background: linear-gradient(145deg, #f8f4e8, #ede8d8);
+    }
+
+    .pagina-numero {
+      position: absolute;
+      bottom: 14px;
+      right: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      color: rgba(100,80,40,0.35);
+    }
+
+    .pagina-linha {
+      width: 60%;
+      height: 1px;
+      background: rgba(100,80,40,0.15);
+      margin: 14px auto;
+    }
+
+    .pagina-texto {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.8;
+      color: #3a2e1c;
+      font-style: italic;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    /* ROSA no canto */
+    .deco-canto {
+      position: absolute;
+      bottom: 28px;
+      left: 20px;
+      opacity: 0.55;
+    }
+
+    /* CONTROLES */
+    .controles {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .btn-pagina {
+      background: transparent;
+      border: 1px solid rgba(240,192,96,0.4);
+      color: #f0c060;
+      font-size: 20px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-pagina:hover { background: rgba(240,192,96,0.1); }
+    .btn-pagina:disabled { opacity: 0.2; cursor: default; }
+
+    .indicador {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(200,216,240,0.4);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .voltar {
+      display: inline-block;
+      margin-top: 20px;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(200,216,240,0.3);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(200,216,240,0.12);
+      padding-bottom: 4px;
+      transition: color 0.3s ease;
+    }
+
+    .voltar:hover { color: rgba(200,216,240,0.7); }
+
+    @keyframes girarFases {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .fases-arco-ring {
+      animation: girarFases 18s linear infinite;
+      transform-origin: center center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="livro" id="livro">
+
+    <!-- CAPA -->
+    <div class="pagina pagina-capa ativa" data-page="0">
+      <!-- estrelinhas de fundo -->
+      <svg class="capa-estrelas" viewBox="0 0 340 480" preserveAspectRatio="xMidYMid slice">
+        <circle cx="20" cy="30" r="1" fill="white" opacity="0.5"/>
+        <circle cx="60" cy="15" r="0.8" fill="white" opacity="0.4"/>
+        <circle cx="300" cy="25" r="1" fill="white" opacity="0.6"/>
+        <circle cx="320" cy="60" r="0.7" fill="white" opacity="0.3"/>
+        <circle cx="10" cy="80" r="0.9" fill="white" opacity="0.5"/>
+        <circle cx="280" cy="90" r="1" fill="white" opacity="0.4"/>
+        <circle cx="40" cy="120" r="0.7" fill="white" opacity="0.3"/>
+        <circle cx="330" cy="130" r="0.8" fill="white" opacity="0.5"/>
+        <circle cx="15" cy="180" r="1" fill="white" opacity="0.4"/>
+        <circle cx="310" cy="170" r="0.7" fill="white" opacity="0.3"/>
+        <circle cx="50" cy="200" r="0.9" fill="white" opacity="0.5"/>
+        <circle cx="290" cy="210" r="1" fill="white" opacity="0.4"/>
+        <circle cx="25" cy="260" r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="320" cy="270" r="0.7" fill="white" opacity="0.5"/>
+        <circle cx="80" cy="300" r="1" fill="white" opacity="0.4"/>
+        <circle cx="260" cy="310" r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="130" cy="380" r="0.7" fill="white" opacity="0.4"/>
+        <circle cx="200" cy="400" r="1" fill="white" opacity="0.3"/>
+        <circle cx="100" cy="440" r="0.8" fill="white" opacity="0.4"/>
+        <circle cx="240" cy="450" r="0.7" fill="white" opacity="0.5"/>
+      </svg>
+
+      <!-- LUA CHEIA -->
+      <svg class="capa-lua" width="120" height="120" viewBox="0 0 120 120">
+        <defs>
+          <radialGradient id="luaGrad" cx="40%" cy="38%" r="55%">
+            <stop offset="0%" stop-color="#fffbe8"/>
+            <stop offset="40%" stop-color="#f0d890"/>
+            <stop offset="100%" stop-color="#c8a840"/>
+          </radialGradient>
+          <filter id="luaGlow">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <circle cx="60" cy="60" r="50" fill="rgba(240,200,80,0.12)" filter="url(#luaGlow)"/>
+        <circle cx="60" cy="60" r="42" fill="url(#luaGrad)"/>
+        <circle cx="45" cy="38" r="5" fill="rgba(180,140,40,0.3)"/>
+        <circle cx="70" cy="55" r="7" fill="rgba(180,140,40,0.2)"/>
+        <circle cx="38" cy="65" r="4" fill="rgba(180,140,40,0.25)"/>
+        <circle cx="75" cy="35" r="3" fill="rgba(180,140,40,0.2)"/>
+        <circle cx="55" cy="75" r="6" fill="rgba(180,140,40,0.15)"/>
+        <circle cx="60" cy="60" r="42" fill="none" stroke="rgba(240,192,80,0.3)" stroke-width="1"/>
+      </svg>
+
+      <!-- FASES EM ARCO GIRANDO -->
+      <svg class="fases-arco" width="220" height="80" viewBox="0 0 220 80">
+        <g class="fases-arco-ring" style="transform-origin:110px 110px;">
+          <!-- fase 1: lua nova -->
+          <g transform="translate(10,10)">
+            <circle cx="20" cy="20" r="18" fill="#020818" stroke="rgba(240,192,80,0.4)" stroke-width="1.2"/>
+          </g>
+          <!-- fase 2: crescente -->
+          <g transform="translate(48,4)">
+            <circle cx="20" cy="20" r="18" fill="#020818" stroke="rgba(240,192,80,0.4)" stroke-width="1.2"/>
+            <path d="M20,2 A18,18 0 0,1 20,38 A10,18 0 0,0 20,2 Z" fill="#f0d060" opacity="0.85"/>
+          </g>
+          <!-- fase 3: quarto crescente -->
+          <g transform="translate(86,2)">
+            <circle cx="20" cy="20" r="18" fill="#020818" stroke="rgba(240,192,80,0.4)" stroke-width="1.2"/>
+            <path d="M20,2 A18,18 0 0,1 20,38 L20,2 Z" fill="#f0d060" opacity="0.85"/>
+          </g>
+          <!-- fase 4: gibosa crescente -->
+          <g transform="translate(124,4)">
+            <circle cx="20" cy="20" r="18" fill="#f0d060" opacity="0.85" stroke="rgba(240,192,80,0.4)" stroke-width="1.2"/>
+            <path d="M20,2 A18,18 0 0,0 20,38 A8,18 0 0,1 20,2 Z" fill="#020818"/>
+          </g>
+          <!-- fase 5: cheia -->
+          <g transform="translate(162,10)">
+            <circle cx="20" cy="20" r="18" fill="#f0d060" opacity="0.9" stroke="rgba(240,192,80,0.5)" stroke-width="1.5"/>
+            <circle cx="14" cy="14" r="3" fill="rgba(180,140,20,0.3)"/>
+            <circle cx="24" cy="22" r="4" fill="rgba(180,140,20,0.2)"/>
+          </g>
+        </g>
+      </svg>
+
+      <div class="capa-ornamento"></div>
+      <p class="capa-titulo">Para você,<br>que ilumina<br>meu universo</p>
+      <p class="capa-sub">toque para começar</p>
+    </div>
+
+    <!-- PÁGINAS (rosa e girassol intercalando) -->
+
+    <!-- Página 1 — ROSA -->
+    <div class="pagina pagina-conteudo" data-page="1">
+      <div class="pagina-linha"></div>
+      <p class="pagina-texto">Escreva aqui o texto da página 1.</p>
+      <div class="pagina-linha"></div>
+      <svg class="deco-canto" width="36" height="48" viewBox="0 0 36 48">
+        <line x1="18" y1="48" x2="18" y2="22" stroke="#7a3a4a" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16,30 C10,26 8,20 12,18" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <path d="M20,34 C26,30 28,24 24,22" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <ellipse cx="18" cy="10" rx="10" ry="12" fill="#c0405a" opacity="0.85"/>
+        <ellipse cx="10" cy="14" rx="8" ry="10" fill="#d05068" opacity="0.75" transform="rotate(-20 10 14)"/>
+        <ellipse cx="26" cy="14" rx="8" ry="10" fill="#d05068" opacity="0.75" transform="rotate(20 26 14)"/>
+        <ellipse cx="18" cy="4" rx="6" ry="8" fill="#e06878" opacity="0.7"/>
+        <circle cx="18" cy="10" r="4" fill="#a0203a" opacity="0.6"/>
+      </svg>
+      <span class="pagina-numero">1</span>
+    </div>
+
+    <!-- Página 2 — GIRASSOL -->
+    <div class="pagina pagina-conteudo" data-page="2">
+      <div class="pagina-linha"></div>
+      <p class="pagina-texto">Escreva aqui o texto da página 2.</p>
+      <div class="pagina-linha"></div>
+      <svg class="deco-canto" width="38" height="50" viewBox="0 0 38 50">
+        <line x1="19" y1="50" x2="19" y2="28" stroke="#4a6b2a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M19,38 C12,34 10,28 14,26" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <g transform="translate(19,14)">
+          <g fill="#c8841f" opacity="0.9">
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(0)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(45)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(90)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(135)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(180)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(225)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(270)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(315)"/>
+          </g>
+          <circle cx="0" cy="0" r="6" fill="#5a3a1a"/>
+          <circle cx="-2" cy="-1" r="1" fill="#3a2410" opacity="0.8"/>
+          <circle cx="2" cy="-1" r="1" fill="#3a2410" opacity="0.8"/>
+          <circle cx="0" cy="2" r="1" fill="#3a2410" opacity="0.8"/>
+        </g>
+      </svg>
+      <span class="pagina-numero">2</span>
+    </div>
+
+    <!-- Página 3 — ROSA -->
+    <div class="pagina pagina-conteudo" data-page="3">
+      <div class="pagina-linha"></div>
+      <p class="pagina-texto">Escreva aqui o texto da página 3.</p>
+      <div class="pagina-linha"></div>
+      <svg class="deco-canto" width="36" height="48" viewBox="0 0 36 48">
+        <line x1="18" y1="48" x2="18" y2="22" stroke="#7a3a4a" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16,30 C10,26 8,20 12,18" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <path d="M20,34 C26,30 28,24 24,22" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <ellipse cx="18" cy="10" rx="10" ry="12" fill="#c0405a" opacity="0.85"/>
+        <ellipse cx="10" cy="14" rx="8" ry="10" fill="#d05068" opacity="0.75" transform="rotate(-20 10 14)"/>
+        <ellipse cx="26" cy="14" rx="8" ry="10" fill="#d05068" opacity="0.75" transform="rotate(20 26 14)"/>
+        <ellipse cx="18" cy="4" rx="6" ry="8" fill="#e06878" opacity="0.7"/>
+        <circle cx="18" cy="10" r="4" fill="#a0203a" opacity="0.6"/>
+      </svg>
+      <span class="pagina-numero">3</span>
+    </div>
+
+    <!-- Página 4 — GIRASSOL -->
+    <div class="pagina pagina-conteudo" data-page="4">
+      <div class="pagina-linha"></div>
+      <p class="pagina-texto">Escreva aqui o texto da página 4.</p>
+      <div class="pagina-linha"></div>
+      <svg class="deco-canto" width="38" height="50" viewBox="0 0 38 50">
+        <line x1="19" y1="50" x2="19" y2="28" stroke="#4a6b2a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M19,38 C12,34 10,28 14,26" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <g transform="translate(19,14)">
+          <g fill="#c8841f" opacity="0.9">
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(0)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(45)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(90)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(135)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(180)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(225)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(270)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(315)"/>
+          </g>
+          <circle cx="0" cy="0" r="6" fill="#5a3a1a"/>
+          <circle cx="-2" cy="-1" r="1" fill="#3a2410" opacity="0.8"/>
+          <circle cx="2" cy="-1" r="1" fill="#3a2410" opacity="0.8"/>
+          <circle cx="0" cy="2" r="1" fill="#3a2410" opacity="0.8"/>
+        </g>
+      </svg>
+      <span class="pagina-numero">4</span>
+    </div>
+
+    <!-- Página 5 — ROSA -->
+    <div class="pagina pagina-conteudo" data-page="5">
+      <div class="pagina-linha"></div>
+      <p class="pagina-texto">Escreva aqui o texto da página 5.</p>
+      <div class="pagina-linha"></div>
+      <svg class="deco-canto" width="36" height="48" viewBox="0 0 36 48">
+        <line x1="18" y1="48" x2="18" y2="22" stroke="#7a3a4a" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16,30 C10,26 8,20 12,18" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <path d="M20,34 C26,30 28,24 24,22" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <ellipse cx="18" cy="10" rx="10" ry="12" fill="#c0405a" opacity="0.85"/>
+        <ellipse cx="10" cy="14" rx="8" ry="10" fill="#d05068" opacity="0.75" transform="rotate(-20 10 14)"/>
+        <ellipse cx="26" cy="14" rx="8" ry="10" fill="#d05068" opacity="0.75" transform="rotate(20 26 14)"/>
+        <ellipse cx="18" cy="4" rx="6" ry="8" fill="#e06878" opacity="0.7"/>
+        <circle cx="18" cy="10" r="4" fill="#a0203a" opacity="0.6"/>
+      </svg>
+      <span class="pagina-numero">5</span>
+    </div>
+
+    <!-- Página 6 — GIRASSOL -->
+    <div class="pagina pagina-conteudo" data-page="6">
+      <div class="pagina-linha"></div>
+      <p class="pagina-texto">Escreva aqui o texto da página 6.</p>
+      <div class="pagina-linha"></div>
+      <svg class="deco-canto" width="38" height="50" viewBox="0 0 38 50">
+        <line x1="19" y1="50" x2="19" y2="28" stroke="#4a6b2a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M19,38 C12,34 10,28 14,26" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <g transform="translate(19,14)">
+          <g fill="#c8841f" opacity="0.9">
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(0)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(45)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(90)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(135)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(180)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(225)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(270)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(315)"/>
+          </g>
+          <circle cx="0" cy="0" r="6" fill="#5a3a1a"/>
+          <circle cx="-2" cy="-1" r="1" fill="#3a2410" opacity="0.8"/>
+          <circle cx="2" cy="-1" r="1" fill="#3a2410" opacity="0.8"/>
+          <circle cx="0" cy="2" r="1" fill="#3a2410" opacity="0.8"/>
+        </g>
+      </svg>
+      <span class="pagina-numero">6</span>
+    </div>
+
+    <!-- Página 7 — ROSA -->
+    <div class="pagina pagina-conteudo" data-page="7">
+      <div class="pagina-linha"></div>
+      <p class="pagina-texto">Escreva aqui o texto da página 7.</p>
+      <div class="pagina-linha"></div>
+      <svg class="deco-canto" width="36" height="48" viewBox="0 0 36 48">
+        <line x1="18" y1="48" x2="18" y2="22" stroke="#7a3a4a" stroke-width="2" stroke-linecap="round"/>
+        <path d="M16,30 C10,26 8,20 12,18" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <path d="M20,34 C26,30 28,24 24,22" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <ellipse cx="18" cy="10" rx="10" ry="12" fill="#c0405a" opacity="0.85"/>
+        <ellipse cx="10" cy="14" rx="8" ry="10" fill="#d05068" opacity="0.75" transform="rotate(-20 10 14)"/>
+        <ellipse cx="26" cy="14" rx="8" ry="10" fill="#d05068" opacity="0.75" transform="rotate(20 26 14)"/>
+        <ellipse cx="18" cy="4" rx="6" ry="8" fill="#e06878" opacity="0.7"/>
+        <circle cx="18" cy="10" r="4" fill="#a0203a" opacity="0.6"/>
+      </svg>
+      <span class="pagina-numero">7</span>
+    </div>
+
+    <!-- Página 8 — GIRASSOL -->
+    <div class="pagina pagina-conteudo" data-page="8">
+      <div class="pagina-linha"></div>
+      <p class="pagina-texto">Escreva aqui o texto da página 8.</p>
+      <div class="pagina-linha"></div>
+      <svg class="deco-canto" width="38" height="50" viewBox="0 0 38 50">
+        <line x1="19" y1="50" x2="19" y2="28" stroke="#4a6b2a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M19,38 C12,34 10,28 14,26" stroke="#5a7a35" stroke-width="1.5" fill="none"/>
+        <g transform="translate(19,14)">
+          <g fill="#c8841f" opacity="0.9">
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(0)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(45)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(90)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(135)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(180)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(225)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(270)"/>
+            <ellipse cx="0" cy="-12" rx="3.5" ry="7" transform="rotate(315)"/>
+          </g>
+          <circle cx="0" cy="0" r="6" fill="#5a3a1a"/>
+          <circle cx="-2" cy="-1" r="1" fill="#3a2410" opacity="0.8"/>
+          <circle cx="2" cy="-1" r="1" fill="#3a2410" opacity="0.8"/>
+          <circle cx="0" cy="2" r="1" fill="#3a2410" opacity="0.8"/>
+        </g>
+      </svg>
+      <span class="pagina-numero">8</span>
+    </div>
+
+  </div>
+
+  <div class="controles">
+    <button class="btn-pagina" id="btn-prev" disabled>‹</button>
+    <span class="indicador" id="indicador">capa</span>
+    <button class="btn-pagina" id="btn-next">›</button>
+  </div>
+
+  <a href="ceu.html" class="voltar">voltar ao céu</a>
+
+  <script>
+    (function(){
+      var paginas = document.querySelectorAll('.pagina');
+      var total = paginas.length;
+      var atual = 0;
+      var btnPrev = document.getElementById('btn-prev');
+      var btnNext = document.getElementById('btn-next');
+      var indicador = document.getElementById('indicador');
+      var livro = document.getElementById('livro');
+      var startX = 0;
+
+      function mostrar(idx){
+        paginas.forEach(function(p){ p.classList.remove('ativa'); });
+        paginas[idx].classList.add('ativa');
+        atual = idx;
+        btnPrev.disabled = atual === 0;
+        btnNext.disabled = atual === total - 1;
+        indicador.textContent = atual === 0 ? 'capa' : (atual + ' / ' + (total - 1));
+      }
+
+      btnNext.addEventListener('click', function(){ if(atual < total-1) mostrar(atual+1); });
+      btnPrev.addEventListener('click', function(){ if(atual > 0) mostrar(atual-1); });
+
+      livro.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
+      livro.addEventListener('touchend', function(e){
+        var diff = startX - e.changedTouches[0].clientX;
+        if(Math.abs(diff) > 40){
+          if(diff > 0 && atual < total-1) mostrar(atual+1);
+          else if(diff < 0 && atual > 0) mostrar(atual-1);
+        }
+      }, {passive:true});
+
+      livro.addEventListener('mousedown', function(e){ startX = e.clientX; });
+      livro.addEventListener('mouseup', function(e){
+        var diff = startX - e.clientX;
+        if(Math.abs(diff) > 40){
+          if(diff > 0 && atual < total-1) mostrar(atual+1);
+          else if(diff < 0 && atual > 0) mostrar(atual-1);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

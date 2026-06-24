@@ -232,6 +232,9 @@
 
       <button class="confirmar" id="confirmar">confirmar palpite</button>
       <p class="revelacao" id="revelacao">Não tem unidade de medida pra isso.<br>Só sei que não tem fim.</p>
+      <p class="revelacao" id="mensagem-extra" style="margin-top:16px;font-size:17px;opacity:0;transition:opacity 1.4s ease;">
+  escreva sua mensagem aqui
+</p>
     </div>
 
     <a href="ceu.html" class="voltar">voltar ao céu</a>
@@ -333,6 +336,9 @@
             confirmar.style.display = 'none';
             revelacao.classList.add('visivel');
             painel.classList.add('tremor');
+           setTimeout(function(){
+  document.getElementById('mensagem-extra').style.opacity = '1';
+}, 1400);
           }
         }
         requestAnimationFrame(step);

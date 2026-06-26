@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>⭐</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Raleway:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: radial-gradient(ellipse at 50% 0%, #0d1f4a 0%, #060f28 40%, #020818 100%);
+      min-height: 100vh;
+      font-family: 'Raleway', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      overflow-x: hidden;
+    }
+
+    /* ===================== TELAS ===================== */
+    .tela {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .tela.ativa { display: flex; }
+
+    .titulo-jogo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 20px;
+      color: #c8d8f0;
+      margin-bottom: 8px;
+    }
+
+    .subtitulo-jogo {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(200,216,240,0.4);
+      margin-bottom: 24px;
+    }
+
+    /* ===================== LABIRINTO ===================== */
+    #canvas-labirinto {
+      border: 1px solid rgba(200,216,240,0.15);
+      border-radius: 8px;
+      touch-action: none;
+      cursor: none;
+      background: rgba(10,22,40,0.8);
+    }
+
+    /* ===================== CONSTELAÇÃO ===================== */
+    #canvas-constelacao {
+      border: 1px solid rgba(200,216,240,0.15);
+      border-radius: 8px;
+      touch-action: none;
+      background: rgba(10,22,40,0.8);
+    }
+
+    .instrucao {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(200,216,240,0.35);
+      margin-top: 12px;
+    }
+
+    /* ===================== NOKIA ===================== */
+    .nokia {
+      background: #1a1a1a;
+      border-radius: 24px 24px 32px 32px;
+      padding: 16px 14px 24px;
+      width: 230px;
+      box-shadow: 0 0 0 2px #333, 0 8px 40px rgba(0,0,0,0.9);
+      animation: fadeUp 0.8s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .nokia-screen {
+      background: #b8c4a0;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 3px solid #555;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+    }
+
+    .status-bar {
+      background: #2a2a2a;
+      padding: 4px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .signal-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 13px;
+    }
+
+    .bar {
+      width: 3px;
+      background: #b8c4a0;
+      border-radius: 1px;
+      transition: opacity 0.5s ease;
+    }
+
+    .status-icon {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 8px;
+      color: #b8c4a0;
+      letter-spacing: 1px;
+    }
+
+    .battery-wrap { display:flex; align-items:center; }
+    .battery-body {
+      width:18px; height:9px;
+      border:1.5px solid #b8c4a0;
+      border-radius:1px; padding:1px;
+      display:flex; align-items:center;
+    }
+    .battery-fill { width:70%; height:100%; background:#b8c4a0; border-radius:1px; }
+    .battery-tip { width:2px; height:5px; background:#b8c4a0; }
+
+    .screen-top {
+      background: #b8c4a0;
+      padding: 3px 6px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #9aaa84;
+    }
+    .screen-top span {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; color:#2a3520; letter-spacing:1px;
+    }
+
+    .sms-body {
+      background: #b8c4a0;
+      padding: 10px 8px;
+      min-height: 170px;
+    }
+
+    .sms-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      color: #1a2510;
+      line-height: 1.55;
+      font-weight: bold;
+    }
+
+    .screen-bottom {
+      background: #9aaa84;
+      padding: 5px 8px;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #7a8a68;
+    }
+    .screen-bottom span {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color:#2a3520; font-weight:bold;
+    }
+
+    .nokia-buttons {
+      padding: 10px 6px 0;
+      display: flex; flex-direction:column;
+      gap:6px; align-items:center;
+    }
+    .btn-row { display:flex; gap:6px; }
+    .btn-soft { background:#2a2a2a; border:1px solid #444; border-radius:4px; width:54px; height:18px; }
+    .btn-nav {
+      background:#333; border:1px solid #555;
+      border-radius:50%; width:54px; height:54px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .btn-nav-inner { background:#222; border-radius:50%; width:22px; height:22px; }
+    .btn-num-row { display:flex; gap:4px; }
+    .btn-num { background:#2a2a2a; border:1px solid #3a3a3a; border-radius:4px; width:32px; height:20px; }
+
+    .voltar {
+      display:inline-block; margin-top:20px;
+      font-family:'Raleway',sans-serif; font-weight:200;
+      font-size:10px; letter-spacing:3px; text-transform:uppercase;
+      color:rgba(200,216,240,0.3); text-decoration:none;
+      border-bottom:1px solid rgba(200,216,240,0.1); padding-bottom:4px;
+      transition:color 0.3s ease;
+    }
+    .voltar:hover { color:rgba(200,216,240,0.6); }
+  </style>
+</head>
+<body>
+
+  <!-- ===== TELA 1: LABIRINTO ===== -->
+  <div class="tela ativa" id="tela-labirinto">
+    <p class="titulo-jogo">guie a estrela</p>
+    <p class="subtitulo-jogo">encontre o caminho até o centro</p>
+    <canvas id="canvas-labirinto" width="320" height="320"></canvas>
+    <p class="instrucao" id="instrucao-lab">arraste a estrela pelo labirinto</p>
+  </div>
+
+  <!-- ===== TELA 2: CONSTELAÇÃO ===== -->
+  <div class="tela" id="tela-constelacao">
+    <p class="titulo-jogo">ligue as estrelas</p>
+    <p class="subtitulo-jogo">forme a constelação na ordem certa</p>
+    <canvas id="canvas-constelacao" width="320" height="320"></canvas>
+    <p class="instrucao" id="instrucao-con">toque nas estrelas em ordem: 1 → 2 → 3 ...</p>
+  </div>
+
+  <!-- ===== TELA 3: NOKIA ===== -->
+  <div class="tela" id="tela-nokia">
+    <div class="nokia">
+      <div class="nokia-screen">
+        <div class="status-bar">
+          <div class="signal-bars">
+            <div class="bar" id="b1" style="height:3px;"></div>
+            <div class="bar" id="b2" style="height:5px;"></div>
+            <div class="bar" id="b3" style="height:8px;"></div>
+            <div class="bar" id="b4" style="height:11px;"></div>
+          </div>
+          <span class="status-icon">Lua</span>
+          <div class="battery-wrap">
+            <div class="battery-body"><div class="battery-fill"></div></div>
+            <div class="battery-tip"></div>
+          </div>
+        </div>
+        <div class="screen-top">
+          <span>◄ msgs</span>
+          <span>840/1</span>
+        </div>
+        <div class="sms-body">
+          <p class="sms-text" id="sms-text"></p>
+        </div>
+        <div class="screen-bottom">
+          <span>Opt.</span>
+          <span>Limpar</span>
+        </div>
+      </div>
+      <div class="nokia-buttons">
+        <div class="btn-row">
+          <div class="btn-soft"></div>
+          <div class="btn-soft"></div>
+        </div>
+        <div class="btn-nav"><div class="btn-nav-inner"></div></div>
+        <div class="btn-num-row">
+          <div class="btn-num"></div>
+          <div class="btn-num"></div>
+          <div class="btn-num"></div>
+        </div>
+      </div>
+    </div>
+    <a href="ceu.html" class="voltar">voltar ao céu</a>
+  </div>
+
+  <script>
+  // ============================================================
+  // LABIRINTO
+  // ============================================================
+  (function(){
+    var canvas = document.getElementById('canvas-labirinto');
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var CELL = 40;
+    var COLS = W/CELL, ROWS = H/CELL;
+
+    // Grade do labirinto (1=parede, 0=caminho)
+    var grid = [
+      [1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,1],
+      [1,0,1,0,1,0,1,1],
+      [1,0,1,0,0,0,1,1],
+      [1,0,1,1,1,0,1,1],
+      [1,0,0,0,0,0,0,1],
+      [1,1,0,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1],
+    ];
+
+    var centro = { col:3, row:3 }; // destino (centro)
+    var jogador = { x:1.5*CELL, y:1.5*CELL }; // posição pixel
+    var arrastando = false;
+    var startTouch = null;
+
+    function desenhar(){
+      ctx.clearRect(0,0,W,H);
+
+      // paredes
+      for(var r=0;r<ROWS;r++){
+        for(var c=0;c<COLS;c++){
+          if(grid[r][c]===1){
+            ctx.fillStyle='rgba(10,30,80,0.9)';
+            ctx.fillRect(c*CELL,r*CELL,CELL,CELL);
+            ctx.strokeStyle='rgba(47,198,255,0.15)';
+            ctx.strokeRect(c*CELL,r*CELL,CELL,CELL);
+          } else {
+            ctx.fillStyle='rgba(10,22,40,0.5)';
+            ctx.fillRect(c*CELL,r*CELL,CELL,CELL);
+          }
+        }
+      }
+
+      // destino (centro)
+      ctx.save();
+      ctx.translate(centro.col*CELL+CELL/2, centro.row*CELL+CELL/2);
+      ctx.fillStyle='rgba(240,192,96,0.3)';
+      ctx.beginPath();
+      ctx.arc(0,0,16,0,Math.PI*2);
+      ctx.fill();
+      desenharEstrela(ctx, 0, 0, 10, '#f0c060', 0.9);
+      ctx.restore();
+
+      // jogador (estrela)
+      ctx.save();
+      ctx.translate(jogador.x, jogador.y);
+      desenharEstrela(ctx, 0, 0, 14, '#2fc6ff', 1);
+      ctx.restore();
+    }
+
+    function desenharEstrela(ctx, x, y, r, cor, op){
+      ctx.save();
+      ctx.globalAlpha = op;
+      ctx.fillStyle = cor;
+      ctx.shadowColor = cor;
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      for(var i=0;i<5;i++){
+        var a = (i*4*Math.PI/5) - Math.PI/2;
+        var ai = a + 2*Math.PI/5;
+        if(i===0) ctx.moveTo(x+r*Math.cos(a), y+r*Math.sin(a));
+        else ctx.lineTo(x+r*Math.cos(a), y+r*Math.sin(a));
+        ctx.lineTo(x+(r*0.4)*Math.cos(ai), y+(r*0.4)*Math.sin(ai));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function colRow(px, py){
+      return { col: Math.floor(px/CELL), row: Math.floor(py/CELL) };
+    }
+
+    function podeIr(px, py){
+      var cr = colRow(px, py);
+      if(cr.col<0||cr.row<0||cr.col>=COLS||cr.row>=ROWS) return false;
+      return grid[cr.row][cr.col]===0;
+    }
+
+    function mover(nx, ny){
+      if(podeIr(nx, ny)){
+        jogador.x = nx;
+        jogador.y = ny;
+      }
+      desenhar();
+      var cr = colRow(jogador.x, jogador.y);
+      if(cr.col===centro.col && cr.row===centro.row){
+        setTimeout(irConstelacao, 600);
+      }
+    }
+
+    function getPos(e){
+      var rect = canvas.getBoundingClientRect();
+      var scale = W/rect.width;
+      var cx = e.touches ? e.touches[0].clientX : e.clientX;
+      var cy = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x:(cx-rect.left)*scale, y:(cy-rect.top)*scale };
+    }
+
+    canvas.addEventListener('mousedown', function(e){ arrastando=true; var p=getPos(e); mover(p.x,p.y); });
+    canvas.addEventListener('mousemove', function(e){ if(!arrastando) return; var p=getPos(e); mover(p.x,p.y); });
+    canvas.addEventListener('mouseup', function(){ arrastando=false; });
+    canvas.addEventListener('touchstart', function(e){ e.preventDefault(); arrastando=true; var p=getPos(e); mover(p.x,p.y); },{passive:false});
+    canvas.addEventListener('touchmove', function(e){ e.preventDefault(); if(!arrastando)return; var p=getPos(e); mover(p.x,p.y); },{passive:false});
+    canvas.addEventListener('touchend', function(){ arrastando=false; });
+
+    desenhar();
+
+    function irConstelacao(){
+      document.getElementById('tela-labirinto').classList.remove('ativa');
+      document.getElementById('tela-constelacao').classList.add('ativa');
+      initConstelacao();
+    }
+
+    window.irConstelacao = irConstelacao;
+  })();
+
+  // ============================================================
+  // CONSTELAÇÃO DO PINGUIM
+  // ============================================================
+  function initConstelacao(){
+    var canvas = document.getElementById('canvas-constelacao');
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+
+    // Pontos do pinguim (ordem de ligação)
+    var pontos = [
+      { x:160, y:40,  n:1  }, // topo cabeça
+      { x:190, y:65,  n:2  }, // lado direito cabeça
+      { x:200, y:100, n:3  }, // pescoço direito
+      { x:210, y:160, n:4  }, // barriga direita
+      { x:200, y:220, n:5  }, // pé direito
+      { x:160, y:240, n:6  }, // base centro
+      { x:120, y:220, n:7  }, // pé esquerdo
+      { x:110, y:160, n:8  }, // barriga esquerda
+      { x:120, y:100, n:9  }, // pescoço esquerdo
+      { x:130, y:65,  n:10 }, // lado esquerdo cabeça
+      { x:160, y:40,  n:11 }, // fecha cabeça (volta ao 1)
+    ];
+
+    // asa direita
+    var asa_d = [
+      { x:200, y:130, n:12 },
+      { x:240, y:150, n:13 },
+      { x:220, y:170, n:14 },
+    ];
+
+    // asa esquerda
+    var asa_e = [
+      { x:120, y:130, n:15 },
+      { x:80,  y:150, n:16 },
+      { x:100, y:170, n:17 },
+    ];
+
+    var todosPontos = pontos.concat(asa_d).concat(asa_e);
+    var proximoIdx = 0;
+    var linhas = [];
+    var concluido = false;
+
+    function desenhar(){
+      ctx.clearRect(0,0,W,H);
+
+      // estrelas de fundo
+      ctx.fillStyle='rgba(200,216,240,0.08)';
+      for(var i=0;i<60;i++){
+        ctx.beginPath();
+        ctx.arc(Math.random()*W,Math.random()*H,Math.random()*1.2,0,Math.PI*2);
+        ctx.fill();
+      }
+
+      // linhas já desenhadas
+      ctx.strokeStyle='rgba(240,192,96,0.6)';
+      ctx.lineWidth=1.5;
+      ctx.shadowColor='rgba(240,192,96,0.4)';
+      ctx.shadowBlur=4;
+      for(var l=0;l<linhas.length;l++){
+        ctx.beginPath();
+        ctx.moveTo(linhas[l].x1,linhas[l].y1);
+        ctx.lineTo(linhas[l].x2,linhas[l].y2);
+        ctx.stroke();
+      }
+      ctx.shadowBlur=0;
+
+      // pontos
+      todosPontos.forEach(function(p,i){
+        var atingido = i < proximoIdx;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,atingido?7:5,0,Math.PI*2);
+        ctx.fillStyle = atingido ? '#f0c060' : 'rgba(200,216,240,0.5)';
+        ctx.shadowColor = atingido ? '#f0c060' : 'transparent';
+        ctx.shadowBlur = atingido ? 8 : 0;
+        ctx.fill();
+        ctx.shadowBlur=0;
+
+        // número
+        ctx.fillStyle = atingido ? '#020818' : 'rgba(200,216,240,0.7)';
+        ctx.font = 'bold 8px Share Tech Mono';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText(p.n, p.x, p.y);
+      });
+    }
+
+    function distancia(a,b){ return Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2); }
+
+    function tocarPonto(px,py){
+      if(concluido) return;
+      var alvo = todosPontos[proximoIdx];
+      if(distancia({x:px,y:py},alvo) < 30){
+        if(proximoIdx>0){
+          var ant = todosPontos[proximoIdx-1];
+          linhas.push({x1:ant.x,y1:ant.y,x2:alvo.x,y2:alvo.y});
+        }
+        proximoIdx++;
+        desenhar();
+        if(proximoIdx>=todosPontos.length){
+          concluido=true;
+          document.getElementById('instrucao-con').textContent='✦ pinguim formado! ✦';
+          setTimeout(irNokia, 1200);
+        }
+      }
+    }
+
+    function getPos(e){
+      var rect=canvas.getBoundingClientRect();
+      var scale=W/rect.width;
+      var cx=e.touches?e.touches[0].clientX:e.clientX;
+      var cy=e.touches?e.touches[0].clientY:e.clientY;
+      return{x:(cx-rect.left)*scale,y:(cy-rect.top)*scale};
+    }
+
+    canvas.addEventListener('click',function(e){ var p=getPos(e); tocarPonto(p.x,p.y); });
+    canvas.addEventListener('touchstart',function(e){ e.preventDefault(); var p=getPos(e); tocarPonto(p.x,p.y); },{passive:false});
+
+    desenhar();
+  }
+
+  // ============================================================
+  // NOKIA
+  // ============================================================
+  function irNokia(){
+    document.getElementById('tela-constelacao').classList.remove('ativa');
+    document.getElementById('tela-nokia').classList.add('ativa');
+
+    // sinal oscilando
+    var bars=[
+      document.getElementById('b1'),
+      document.getElementById('b2'),
+      document.getElementById('b3'),
+      document.getElementById('b4')
+    ];
+    var nivel=4;
+    function oscilar(){
+      nivel=Math.max(1,Math.min(4,nivel+(Math.random()<0.5?-1:1)));
+      bars.forEach(function(b,i){ b.style.opacity=i<nivel?'1':'0.2'; });
+      setTimeout(oscilar,1200+Math.random()*1200);
+    }
+    oscilar();
+
+    // texto digitando — SUBSTITUA AQUI pela sua mensagem
+    var msg = "escreva sua mensagem aqui para a Lua.";
+    var idx=0;
+    var el=document.getElementById('sms-text');
+    function digitar(){
+      if(idx<=msg.length){
+        el.textContent=msg.slice(0,idx);
+        idx++;
+        setTimeout(digitar,45+Math.random()*30);
+      }
+    }
+    setTimeout(digitar,600);
+  }
+  </script>
+
+</body>
+</html>

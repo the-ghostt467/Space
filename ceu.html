@@ -383,7 +383,7 @@
     },
     {
       nome: "Estrela 6",
-      mensagem: "Não preciso de um momento específico para falar o que sinto — e talvez seja exatamente isso que diferencia o que temos.
+      mensagem: `Não preciso de um momento específico para falar o que sinto — e talvez seja exatamente isso que diferencia o que temos.
 
 Já disse antes e repito: Estou aqui para o que precisar. Mesmo que a vida nos leve por caminhos diferentes, mesmo que estejamos sem se falar — isso não muda. Não é uma frase bonita, é uma postura.
 
@@ -393,7 +393,7 @@ Tem uma promessa que fiz quando estávamos juntos. Você pode não lembrar, mas 
 
 Quero ser alguém que soma na sua vida. Não de forma pesada, sem cobranças, sem expectativas que te sufoquem. Quero ser alguém que não fuja quando a tempestade chegar, mas que fique ao seu lado para atravessar. Só presente, da forma que faz sentido pra você.
 
-E isso, independente de qualquer coisa, não muda.",
+E isso, independente de qualquer coisa, não muda.`,
       x: 25, y: 55,
       tamanho: 17
     },
@@ -445,21 +445,21 @@ E isso, independente de qualquer coisa, não muda.",
         <span class="estrela-label">${e.nome}</span>
       </div>
     `;
-    el.addEventListener('click', () => {
-  if (i === 7) {
-    window.open('velocimetro.html', '_blank');
-   } else if (i === 4) {
-    window.open('enfermagem.html', '_blank');   
+   el.addEventListener('click', () => {
+  if (i === 0) {
+    window.open('girassois.html', '_blank');
   } else if (i === 1) {
     window.open('noiva-cadaver.html', '_blank');
-  } else if (i === 0) {
-  window.open('girassois.html', '_blank');
-  } else if (i === 3) {
-  window.open('carta-livro.html', '_blank');
-  } else if (i === 6) {
-  window.open('album.html', '_blank');
   } else if (i === 2) {
-  window.open('coreia.html', '_blank');
+    window.open('coreia.html', '_blank');
+  } else if (i === 3) {
+    window.open('carta-livro.html', '_blank');
+  } else if (i === 4) {
+    window.open('enfermagem.html', '_blank');
+  } else if (i === 6) {
+    window.open('album.html', '_blank');
+  } else if (i === 7) {
+    window.open('velocimetro.html', '_blank');
   } else {
     abrirModal(e, el);
   }
